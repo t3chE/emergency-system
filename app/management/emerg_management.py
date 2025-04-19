@@ -27,8 +27,22 @@ class EmergencyManagement:
     def update_incident(self, incident_id: str, location: str = None, emergency_type: str = None,
             priority: str = None, required_resources: List[str] = None, status: str = None):    
         """ Update an existing incident """
-        pass
 
+        incident = next((incident for incident in self.incidents if incident.incident_id == incident_id), None)
+        if incident:
+            if location:
+                incident.location = location
+            if emergency_type:
+                incident.emerg_type = emergency_type
+            if priority:
+                incident.priority = priority
+            if required_resources:
+                incident.required_resources = required_resources
+            if status:
+                incident.update_status(status)
+            return True
+        return False
+    
     def view_incidents(self) -> List[Incident]:
         """ View all incidents """
         return self.incidents
