@@ -1,4 +1,5 @@
 import math
+
 def calculate_distance(coord1, coord2):
     """
     Calculate the Haversine distance between two points on the Earth specified by latitude and longitude.

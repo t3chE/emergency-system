@@ -1,7 +1,7 @@
 from typing import Dict, List
-from incidents.emerg_incident import Incident, IncidentStatus
-from resources.emerg_resource import Resource, ResourceStatus
-from priorities.emerg_priority import Priority
+from app.emerg_incident import Incident, IncidentStatus
+from app.emerg_resource import Resource, ResourceStatus
+from app.emerg_priority import Priority
 
 class EmergencyManagement:
     """ Class to manage emergency incidents, resources, and priorities """
