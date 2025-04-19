@@ -1,5 +1,5 @@
 from typing import Dict, List
-from app.emerg_incident import Incident, IncidentStatus
+from .emerg_incident import Incident, IncidentStatus
 from app.emerg_resource import Resource, ResourceStatus
 from app.emerg_priority import Priority
 
