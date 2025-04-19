@@ -33,6 +33,8 @@ class Incident:
         self.updated_at = datetime.now()
 
     def __repr__(self):
+        """ String representation of the incident object """
+        
         return (f"Incident ID: {self.incident_id}\n"
                 f"Location: {self.location}\n"
                 f"Emergency Type: {self.emerg_type}\n"
@@ -40,5 +42,7 @@ class Incident:
                 f"Required Resources: {self.required_resources}\n"
                 f"Status: {self.status.value}\n"
                 f"Assigned Resources: {self.assigned_resources}\n"
-                f"Created At: {self.created_at}\n"
-                f"Updated At: {self.updated_at}")
+                f"Created At: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
+                f"Updated At: {self.updated_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
+                f"----------------------------------------\n")
+        
