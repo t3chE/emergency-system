@@ -9,7 +9,25 @@ class EmergencyManagement:
     def __init__(self):
         self.incidents: Dict[Incident] = []
         self.resources: Dict[str, Resource] = {}
+        self.location_mapping = {}
+        self.initialize_location_mapping()
         
+    def initialize_location_mapping(self):
+        """ Initialize the location mapping for resources """
+       
+        self.location_mapping = {
+            "Zone 1": (51.4592, -0.2567),  # Example coordinates
+            "Zone 2": (51.4761, -0.1441),
+            "Zone 3": (51.4575, -0.1165),
+            "Zone 4": (51.4573, -0.1437),
+            "Zone 5": (51.3697, -0.0779),
+            "Zone 6": (51.4882, -0.0958),
+            "Zone 7": (51.4789, -0.2017),
+            "Zone 8": (51.4789, -0.1221),
+            "Zone 9": (51.4571, -0.0057),
+            "Zone 10": (51.4695, -0.0685),
+        }    
+
     def add_incident(self, location: str, emergency_type: str, priority: str, required_resources: List[str]):
         """ Add a new incident to the system """
 
@@ -49,7 +67,7 @@ class EmergencyManagement:
 
     def assign_priority(self, priority: Priority):
         self.priorities[priority.id] = priority
-
+        
     def view_resources(self) -> List[Resource]:
         """ View all resources """
         return [resource for resource in self.resources.values() if resource.status == ResourceStatus.AVAILABLE]
