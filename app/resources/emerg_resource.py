@@ -2,11 +2,15 @@ import uuid
 from enum import Enum
 
 class ResourceStatus(Enum):
+    """Enum for resource status."""
+
     AVAILABLE = "available"
     ASSIGNED = "assigned"
     UNAVAILABLE = "unavailable"
 
 class Resource:
+    """Class representing an emergency resource."""
+    
     def __init__(self, name: str, resource_type: str, location: str):
         self.resource_id = str(uuid.uuid4())
         self.name = name
