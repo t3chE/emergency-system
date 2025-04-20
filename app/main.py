@@ -1,4 +1,4 @@
-from .utils.emerg_management import EmergencyManagement
+from utils.emerg_management import EmergencyManagement
 # This is the main entry point for the emergency management system.
 
 if __name__ == "__main__":
