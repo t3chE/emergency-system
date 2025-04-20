@@ -107,6 +107,10 @@ class EmergencyManagement:
         # Sample data for testing
 
         while True:
+            print("\n")
+            print("=========================================")
+            print("Welcome to the Emergency Management System")
+            print("=========================================")
             print("Emergency Management System")
             print("1. Add Incident")
             print("2. Update Incident")
@@ -116,6 +120,7 @@ class EmergencyManagement:
             print("6. View Resources")
             print("7. Generate Incident Report")
             print("8. Exit")
+            print("=========================================")
 
             choice = input("Enter your choice: ")
             if choice == '1':
