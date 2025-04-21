@@ -108,10 +108,9 @@ class EmergencyManagement:
 
         while True:
             print("\n")
-            print("=========================================")
+            print("==========================================")
             print("Welcome to the Emergency Management System")
-            print("=========================================")
-            print("Emergency Management System")
+            print("==========================================\n")
             print("1. Add Incident")
             print("2. Update Incident")
             print("3. View Incidents")
@@ -119,8 +118,8 @@ class EmergencyManagement:
             print("5. Reallocate Resource")
             print("6. View Resources")
             print("7. Generate Incident Report")
-            print("8. Exit")
-            print("=========================================")
+            print("8. Exit\n")
+            print("==========================================\n")
 
             choice = input("Enter your choice: ")
             if choice == '1':
