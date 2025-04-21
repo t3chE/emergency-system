@@ -120,7 +120,8 @@ class EmergencyManagement:
     
     def run(self):
         """ Run the emergency management system """
-        # Sample data for testing
+        # Load initial data
+        self.load_data('incidents.json', 'resources.json')
 
         while True:
             print("\n")
@@ -180,6 +181,8 @@ class EmergencyManagement:
                     print(incident)
 
             elif choice == '8':
+                # Save data before exiting
+                self.save_data('incidents.json', 'resources.json')
                 break
             else:
                 print("Invalid choice! Please try again.")
