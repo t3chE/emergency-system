@@ -13,9 +13,7 @@ class IncidentStatus(Enum):
     # Add more statuses as needed
 
 class Incident:
-    """ This class represents an emergency incident.
-    It contains attributes such as incident ID, location, emergency type,
-    priority, required resources, status, assigned resources, and timestamps"""
+    """ This class represents an emergency incident."""
 
     def __init__(self, location: str, emergency_type: str, priority, required_resources: List[str]):
         self.incident_id = str(uuid.uuid4())
@@ -44,7 +42,7 @@ class Incident:
         if not isinstance(self.assigned_resources, list) or not all(isinstance(res, str) for res in self.assigned_resources):
             raise ValueError("assigned_resources must be a list of strings.")
         # Ensure status is an instance of IncidentStatus Enum
-        
+
         if not isinstance(self.status, IncidentStatus):
             raise ValueError(f"Status must be an instance of IncidentStatus Enum, got {type(self.status)} instead.")
         # Ensure created_at and updated_at are datetime objects     
