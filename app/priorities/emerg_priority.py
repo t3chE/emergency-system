@@ -1,10 +1,9 @@
 from enum import Enum
 
 class Priority(Enum):
-    CAT_1 = "cat_1"
-    CAT_2 = "cat_2"
-    CAT_3 = "cat_3"
-    CAT_4 = "cat_4"
+    HIGH = "High"
+    MEDIUM = "Medium"
+    LOW = "Low"
    
     def __lt__(self, other):
         """ Define less than for priority comparison (CAT_1 > CAT_2 > ...) """

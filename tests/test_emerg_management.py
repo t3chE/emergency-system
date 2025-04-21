@@ -9,10 +9,11 @@ class TestEmergencyManagement(unittest.TestCase):
 
     def setUp(self):
         """ Set up a fresh instance of EmergencyManagement for each test """
+
         self.em = EmergencyManagement()
         self.em.resources = {
-            "Resource1": Resource("Resource1", ResourceStatus.AVAILABLE),
-            "Resource2": Resource("Resource2", ResourceStatus.AVAILABLE),
+            "Resource1": Resource("Resource1", ResourceStatus.AVAILABLE, "Fire Truck"),
+            "Resource2": Resource("Resource2", ResourceStatus.AVAILABLE, "Ambulance"),
         }
 
     def test_add_incident(self):
@@ -20,13 +21,13 @@ class TestEmergencyManagement(unittest.TestCase):
         incident_id = self.em.add_incident(
             location="Zone 1",
             emergency_type="Fire",
-            priority="CAT_1",
+            priority="high",
             required_resources=["Resource1"]
         )
         self.assertEqual(len(self.em.incidents), 1)
         self.assertEqual(self.em.incidents[0].incident_id, incident_id)
         self.assertEqual(self.em.incidents[0].location, "Zone 1")
-        self.assertEqual(self.em.incidents[0].priority, Priority.CATEGORY_1)
+        self.assertEqual(self.em.incidents[0].priority, Priority.HIGH)
         self.assertIn("Resource1", self.em.incidents[0].assigned_resources)
 
     def test_update_incident(self):
@@ -34,14 +35,14 @@ class TestEmergencyManagement(unittest.TestCase):
         incident_id = self.em.add_incident(
             location="Zone 1",
             emergency_type="Fire",
-            priority="CAT_1",
+            priority="high",
             required_resources=["Resource1"]
         )
         updated = self.em.update_incident(
             incident_id=incident_id,
             location="Zone 2",
             emergency_type="Flood",
-            priority="CAT_2",
+            priority="medium",
             required_resources=["Resource2"],
             status="IN_PROGRESS"
         )
@@ -58,7 +59,7 @@ class TestEmergencyManagement(unittest.TestCase):
         incident_id = self.em.add_incident(
             location="Zone 1",
             emergency_type="Fire",
-            priority="CAT_1",
+            priority="high",
             required_resources=["Resource1"]
         )
         allocated = self.em.allocate_resource(incident_id, "Resource1")
@@ -72,13 +73,13 @@ class TestEmergencyManagement(unittest.TestCase):
         incident_id1 = self.em.add_incident(
             location="Zone 1",
             emergency_type="Fire",
-            priority="CAT_1",
+            priority="high",
             required_resources=["Resource1"]
         )
         incident_id2 = self.em.add_incident(
             location="Zone 2",
             emergency_type="Flood",
-            priority="CAT_2",
+            priority="medium",
             required_resources=[]
         )
         self.em.allocate_resource(incident_id1, "Resource1")
@@ -93,7 +94,7 @@ class TestEmergencyManagement(unittest.TestCase):
         self.em.add_incident(
             location="Zone 1",
             emergency_type="Fire",
-            priority="CAT_1",
+            priority="high",
             required_resources=["Resource1"]
         )
         self.em.save_data("test_incidents.json", "test_resources.json")

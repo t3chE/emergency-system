@@ -52,7 +52,7 @@ class EmergencyManagement:
         for resource_id in required_resources:
             resource = self.resources.get(resource_id)
             if resource:
-                resource.status = ResourceStatus.ALLOCATED
+                resource.status = ResourceStatus.ASSIGNED
                 incident.assigned_resources.append(resource_id)
                 resource.assigned_incident_id = incident.incident_id
         self.resources[incident.incident_id] = incident
@@ -96,7 +96,7 @@ class EmergencyManagement:
     def allocate_resource(self, incident_id: str, resource_id: str):
         """ Allocate a resource to an incident """
 
-        # Sort open incidents by priority (highest first - CAT_1 is highest)
+        # Sort open incidents by priority (highest first)
         open_incidents = sorted([i for i in self.incidents.values() if i.status in [IncidentStatus.OPEN, IncidentStatus.NEW]], 
             key=lambda incident: incident.priority,
             reverse=False) # Reverse is False because CAT_1 has a lower index
