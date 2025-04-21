@@ -2,6 +2,12 @@ from typing import Dict, List
 from app.incidents.emerg_incident import Incident, IncidentStatus
 from app.resources.emerg_resource import Resource, ResourceStatus
 from app.priorities.emerg_priority import Priority
+from app.utils.data_persistence import (
+    save_incidents_to_file,
+    load_incidents_from_file,
+    save_resources_to_file,
+    load_resources_from_file,
+)
 
 class EmergencyManagement:
     """ Class to manage emergency incidents, resources, and priorities """
@@ -11,6 +17,16 @@ class EmergencyManagement:
         self.resources: Dict[str, Resource] = {}
         self.location_mapping = {}
         self.initialize_location_mapping()
+
+    def save_data(self, incidents_file: str, resources_file: str):
+        """ Save incidents and resources to JSON files """
+        save_incidents_to_file(self.incidents, incidents_file)
+        save_resources_to_file(self.resources, resources_file)
+
+    def load_data(self, incidents_file: str, resources_file: str):
+        """ Load incidents and resources from JSON files """
+        self.incidents = load_incidents_from_file(incidents_file)
+        self.resources = load_resources_from_file(resources_file)
         
     def initialize_location_mapping(self):
         """ Initialize the location mapping for resources """
