@@ -96,6 +96,10 @@ class EmergencyManagement:
     def allocate_resource(self, incident_id: str, resource_id: str):
         """ Allocate a resource to an incident """
 
+        # Sort open incidents by priority (highest first - CAT_1 is highest)
+        open_incidents = sorted([i for i in self.incidents.values() if i.status in [IncidentStatus.OPEN, IncidentStatus.NEW]], 
+            key=lambda incident: incident.priority,
+            reverse=False) # Reverse is False because CAT_1 has a lower index
         incident = next((incident for incident in self.incidents if incident.incident_id == incident_id), None)
         resource = self.resources.get(resource_id)
         if incident and resource and resource.status == ResourceStatus.AVAILABLE:
@@ -114,6 +118,14 @@ class EmergencyManagement:
             resource.assigned_incident_id = incident_id
             return True
         return False
+    
+    def reallocate_resource_for_new_high_priority(self, new_incident_id: str):
+        """ Trigger resource reallocation when a new high-priority incident is added. """
+
+        incident = self.incidents.get(new_incident_id)
+        if incident and incident.priority == Priority.CATEGORY_1:
+            print(f"Initiating resource reallocation for new high-priority incident: {new_incident_id}")
+        self._allocate_resources()
 
     def get_incident_report(self) -> List[Incident]:
         """ Generate a report of all incidents """
@@ -143,23 +155,35 @@ class EmergencyManagement:
             print("8. Exit\n")
             print("==========================================\n")
 
-            choice = input("Enter your choice: ")
+            choice = input("Please enter an option: ")
             if choice == '1':
-                location = input("Enter location: ")
-                emergency_type = input("Enter emergency type: ")
-                priority = input("Enter priority: ")
-                required_resources = input("Enter required resources (comma separated): ").split(',')
+                location = input("Enter location (e.g., Zone 1, Zone 2...): ")
+                emergency_type = input("Enter emergency type (natural disaster, medical or human-caused): ")
+                priority = input("Enter priority (CAT_1 - CAT_4): ")
+                required_resources = input("Enter required resources (comma separated, e.g., Fire Truch, Ambulance): ").split(',')
                 self.add_incident(location, emergency_type, priority, required_resources)
+                new_incident_id = self.add_incident(location, emergency_type, priority, required_resources)
+                incident = self.incidents.get(new_incident_id)
+                if incident and incident.priority == Priority.CATEGORY_1:
+                    self.reallocate_resources_for_new_high_priority(new_incident_id)
 
             elif choice == '2':
                 incident_id = input("Enter incident ID to update: ")
                 location = input("Enter new location (or leave blank): ")
                 emergency_type = input("Enter new emergency type (or leave blank): ")
-                priority = input("Enter new priority (or leave blank): ")
-                required_resources = input("Enter new required resources (comma separated or leave blank): ").split(',')
-                status = input("Enter new status (or leave blank): ")
+                priority = input("Enter new priority (CAT_1 to CAT_4, or leave blank): ")
+                required_resources = input("Enter new required resources (comma separated, or leave blank): ").split(',')
+                status = input("Enter new status (NEW, OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, or leave blank): ")
                 self.update_incident(incident_id, location, emergency_type, priority, required_resources, status)
-
+                if self.update_incident(incident_id, location, emergency_type, priority, required_resources, status):
+                    incident = self.incidents.get(incident_id)
+                    if priority:
+                        self.reallocate_resources_for_priority_change(incident_id)
+                    if status:
+                        self._allocate_resources()
+                else:
+                    print(f"Incident with ID {incident_id} not found.")
+                    
             elif choice == '3':
                 incidents = self.view_incidents()
                 for incident in incidents:
