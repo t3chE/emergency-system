@@ -20,7 +20,7 @@ class EmergencyManagement:
 
     def save_data(self, incidents_file: str, resources_file: str):
         """ Save incidents and resources to JSON files """
-        save_incidents_to_file(self.incidents, incidents_file)
+        save_incidents_to_file(self.incidents, incidents_file)   
         save_resources_to_file(self.resources, resources_file)
 
     def load_data(self, incidents_file: str, resources_file: str):
@@ -39,7 +39,7 @@ class EmergencyManagement:
             "Zone 5": (51.3697, -0.0779),
             "Zone 6": (51.4882, -0.0958),
             "Zone 7": (51.4789, -0.2017),
-            "Zone 8": (51.4789, -0.1221),
+            "Zone 8": (51.4789, -0.1221),   
             "Zone 9": (51.4571, -0.0057),
             "Zone 10": (51.4695, -0.0685),
         }    
@@ -69,7 +69,12 @@ class EmergencyManagement:
             if emergency_type:
                 incident.emerg_type = emergency_type
             if priority:
-                incident.priority = priority
+                try:
+                    incident.priority = Priority[priority.upper()]
+                except KeyError:
+                    print(f"Invalid priority level: {priority}. Must be one of {list(Priority.__members__.keys())}.")
+                    return False
+            self.allocate_resource(incident_id, incident.assigned_resources)    
             if required_resources:
                 incident.required_resources = required_resources
             if status:
