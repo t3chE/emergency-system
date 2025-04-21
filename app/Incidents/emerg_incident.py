@@ -27,6 +27,27 @@ class Incident:
         self.assigned_resources: List[str] = []
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        try:
+            self.priority = Priority[priority.upper()]
+        except KeyError:
+            raise ValueError(f"Invalid priority level: {priority}. Must be one of {list(Priority.__members__.keys())}.")
+        # Ensure priority is a valid enum member
+
+        if not isinstance(self.priority, Priority):
+            raise ValueError(f"Priority must be an instance of Priority Enum, got {type(self.priority)} instead.")
+        # Ensure required_resources is a list of strings
+
+        if not isinstance(self.required_resources, list) or not all(isinstance(res, str) for res in self.required_resources):
+            raise ValueError("required_resources must be a list of strings.")
+        # Ensure assigned_resources is a list of strings
+
+        if not isinstance(self.assigned_resources, list) or not all(isinstance(res, str) for res in self.assigned_resources):
+            raise ValueError("assigned_resources must be a list of strings.")
+        # Ensure status is an instance of IncidentStatus Enum
+        
+        if not isinstance(self.status, IncidentStatus):
+            raise ValueError(f"Status must be an instance of IncidentStatus Enum, got {type(self.status)} instead.")
+        # Ensure created_at and updated_at are datetime objects     
 
     def update_status(self, new_status: IncidentStatus):
         self.status = new_status
