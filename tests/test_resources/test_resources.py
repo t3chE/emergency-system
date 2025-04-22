@@ -2,6 +2,11 @@ import unittest
 from app.resources.emerg_resource import Resource, ResourceStatus
 
 class TestResource(unittest.TestCase):
+    def setUp(self):
+        """Set up test resources."""
+        self.resource1 = Resource("Resource1", "Type1", "Zone 1")
+        self.resource2 = Resource("Resource2", "Type2", "Zone 2")
+        
     def test_resource_initialization(self):
         """Test that a Resource is initialized correctly."""
         resource = Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1")
