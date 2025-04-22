@@ -20,10 +20,14 @@ class Incident:
         self.incident_id = str(uuid.uuid4())
         self.location = location
         self.emerg_type = emergency_type
-        self.priority = priority
+        try:
+            # Map the priority string to the Priority enum
+            self.priority = Priority[priority.upper()]
+        except KeyError:
+            raise ValueError(f"Invalid priority: {priority}. Must be one of {list(Priority.__members__.keys())}.")
         self.required_resources = required_resources
         self.status = IncidentStatus.OPEN 
-        self.assigned_resources: List[str] = []
+        self.assigned_resources = []
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         try:
