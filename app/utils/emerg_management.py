@@ -13,21 +13,20 @@ class EmergencyManagement:
     """ Class to manage emergency incidents, resources, and priorities """
 
     def __init__(self):
-        self.incidents: Dict[Incident] = []
+        self.incidents: Dict[str, Incident] = {}
         self.resources: Dict[str, Resource] = {}
         self.location_mapping = {}
         self.initialize_location_mapping()
 
-    def save_data(self, incidents_file: str, resources_file: str):
+    def save_data(self, incidents_file, resources_file):
         """ Save incidents and resources to JSON files """
         save_incidents_to_file(self.incidents, incidents_file)   
         save_resources_to_file(self.resources, resources_file)
 
-    def load_data(self, incidents_file: str, resources_file: str):
-        """ Load incidents and resources from JSON files """
+    def load_data(self, incidents_file, resources_file):
         self.incidents = load_incidents_from_file(incidents_file)
         self.resources = load_resources_from_file(resources_file)
-        
+                
     def initialize_location_mapping(self):
         """ Initialize the location mapping for resources """
        
@@ -42,27 +41,65 @@ class EmergencyManagement:
             "Zone 8": (51.4789, -0.1221),   
             "Zone 9": (51.4571, -0.0057),
             "Zone 10": (51.4695, -0.0685),
-        }    
+        }
 
-    def add_incident(self, location: str, emergency_type: str, priority: str, required_resources: List[str]):
+    def process_resource_allocation(self):
+        """ Allocate available resources to open incidents based on priority. """
+        available_resources = [res for res in self.resources.values() if res.status == ResourceStatus.AVAILABLE]
+        open_incidents = sorted(
+            [inc for inc in self.incidents.values() if inc.status == IncidentStatus.OPEN or inc.status == IncidentStatus.IN_PROGRESS],
+            key=lambda inc: inc.priority,  # Sort by priority (you might need to adjust the sorting order)
+            reverse=True,  # Assuming higher priority enums come first
+        )
+
+        # Reset assignments before re-allocating
+        for resource in self.resources.values():
+            if resource.status == ResourceStatus.ASSIGNED:
+                resource.status = ResourceStatus.AVAILABLE
+                resource.assigned_incident_id = None
+        for incident in self.incidents.values():
+            incident.assigned_resources = []
+
+        for incident in open_incidents:
+            for required_resource_type in incident.required_resources:
+                # Find an available resource of the required type
+                suitable_resource = next(
+                    (res for res in available_resources if res.resource_type == required_resource_type and res.status == ResourceStatus.AVAILABLE),
+                    None,
+                )
+                if suitable_resource:
+                    self.allocate_resource(incident.incident_id, suitable_resource.resource_id)
+                    available_resources.remove(suitable_resource) # Ensure resource isn't allocated again in this cycle
+
+        print("\n--- Resource Allocation Processed ---")
+        for incident_id, incident in self.incidents.items():
+            print(f"Incident {incident_id}: Assigned Resources: {incident.assigned_resources}")
+        for resource_id, resource in self.resources.items():
+            print(f"Resource {resource_id}: Status: {resource.status.value}, Assigned to: {resource.assigned_incident_id}")
+        print("-------------------------------------\n")    
+
+    def add_incident(self, location, emergency_type, priority, required_resources):
         """ Add a new incident to the system """
 
         incident = Incident(location, emergency_type, priority, required_resources)
-        self.incidents.append(incident)
+        self.incidents[incident.incident_id] = incident # Store the incident in the dictionary
+
         for resource_id in required_resources:
             resource = self.resources.get(resource_id)
-            if resource:
+            if resource and resource.status == ResourceStatus.AVAILABLE:  # Only assign if available
                 resource.status = ResourceStatus.ASSIGNED
                 incident.assigned_resources.append(resource_id)
                 resource.assigned_incident_id = incident.incident_id
-        self.resources[incident.incident_id] = incident
+
+        self.process_resource_allocation() # Reallocate resources after adding a new incident
+        
         return incident.incident_id
 
     def update_incident(self, incident_id: str, location: str = None, emergency_type: str = None,
             priority: str = None, required_resources: List[str] = None, status: str = None):    
         """ Update an existing incident """
 
-        incident = next((incident for incident in self.incidents if incident.incident_id == incident_id), None)
+        incident = self.incidents.get(incident_id) # Directly get the incident by its ID
         if incident:
             if location:
                 incident.location = location
@@ -74,7 +111,8 @@ class EmergencyManagement:
                 except KeyError:
                     print(f"Invalid priority level: {priority}. Must be one of {list(Priority.__members__.keys())}.")
                     return False
-            self.allocate_resource(incident_id, incident.assigned_resources)    
+                
+            self.process_resource_allocation()    
             if required_resources:
                 incident.required_resources = required_resources
             if status:
@@ -93,39 +131,40 @@ class EmergencyManagement:
         """ View all resources """
         return [resource for resource in self.resources.values() if resource.status == ResourceStatus.AVAILABLE]
     
-    def allocate_resource(self, incident_id: str, resource_id: str):
-        """ Allocate a resource to an incident """
-
-        # Sort open incidents by priority (highest first)
-        open_incidents = sorted([i for i in self.incidents.values() if i.status in [IncidentStatus.OPEN, IncidentStatus.NEW]], 
-            key=lambda incident: incident.priority,
-            reverse=False) # Reverse is False because CAT_1 has a lower index
-        incident = next((incident for incident in self.incidents if incident.incident_id == incident_id), None)
+    def allocate_resource(self, incident_id, resource_id):
         resource = self.resources.get(resource_id)
-        if incident and resource and resource.status == ResourceStatus.AVAILABLE:
-            incident.assigned_resources.append(resource_id)
+        if resource and resource.status == ResourceStatus.AVAILABLE:
+            resource.status = ResourceStatus.ASSIGNED
             resource.assigned_incident_id = incident_id
-            resource.status = ResourceStatus.ALLOCATED
-            return True
+            incident = self.incidents.get(incident_id)
+            if incident:
+                incident.assigned_resources.append(resource_id)
+                return True
         return False
 
-    def reallocate_resource(self, incident_id: str, resource_id: str):
-        """ Reallocate a resource from one incident to another """
-
-        incident = next((incident for incident in self.incidents if incident.incident_id == incident_id), None)
+    def reallocate_resource(self, incident_id, resource_id):
         resource = self.resources.get(resource_id)
-        if incident and resource and resource.status == ResourceStatus.ALLOCATED:
+        if resource:
+        # Remove resource from the current incident
+            current_incident = self.incidents.get(resource.assigned_incident_id)
+            if current_incident:
+                current_incident.assigned_resources.remove(resource_id)
+
+            # Assign resource to the new incident
             resource.assigned_incident_id = incident_id
-            return True
+            resource.status = ResourceStatus.ASSIGNED
+            new_incident = self.incidents.get(incident_id)
+            if new_incident:
+                new_incident.assigned_resources.append(resource_id)
+                return True
         return False
     
     def reallocate_resource_for_new_high_priority(self, new_incident_id: str):
         """ Trigger resource reallocation when a new high-priority incident is added. """
-
         incident = self.incidents.get(new_incident_id)
-        if incident and incident.priority == Priority.CATEGORY_1:
+        if incident and incident.priority == Priority.HIGH: # Adjust based on your highest priority
             print(f"Initiating resource reallocation for new high-priority incident: {new_incident_id}")
-        self._allocate_resources()
+            self.process_resource_allocation()
 
     def get_incident_report(self) -> List[Incident]:
         """ Generate a report of all incidents """

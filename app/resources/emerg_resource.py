@@ -1,5 +1,6 @@
 import uuid
 from enum import Enum
+from app.utils.emerg_management import EmergencyManagement
 
 class ResourceStatus(Enum):
     """Enum for resource status."""
@@ -28,4 +29,12 @@ class Resource:
                     f"Assigned to Incident: {self.assigned_incident_id if self.assigned_incident_id else 'None'}\n"
                     f"----------------------------------\n"
                      ) 
+        
+        def setUp(self):
+            """ Set up a fresh instance of EmergencyManagement for each test """
+            self.em = EmergencyManagement()
+            self.em.resources = {
+                "Resource1": Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1"),
+                "Resource2": Resource("Resource2", ResourceStatus.AVAILABLE, "Zone 2"),
+        }
         

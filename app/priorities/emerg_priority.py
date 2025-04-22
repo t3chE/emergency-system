@@ -1,9 +1,9 @@
 from enum import Enum
 
 class Priority(Enum):
-    HIGH = "High"
-    MEDIUM = "Medium"
-    LOW = "Low"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
    
     def __lt__(self, other):
         """ Define less than for priority comparison (CAT_1 > CAT_2 > ...) """
