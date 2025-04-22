@@ -9,13 +9,18 @@ class TestResource(unittest.TestCase):
         
     def test_resource_initialization(self):
         """Test that a Resource is initialized correctly."""
-        resource = Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1")
-        self.assertEqual(resource.resource_id, "Resource1")
-        self.assertEqual(resource.status, ResourceStatus.AVAILABLE)
+        resource = Resource("Resource1", "Type1", "Zone 1")
+        self.assertEqual(resource.name, "Resource1")  # Check the name
+        self.assertEqual(resource.resource_type, "Type1")
         self.assertEqual(resource.location, "Zone 1")
+        self.assertEqual(resource.status, ResourceStatus.AVAILABLE)
+        self.assertIsNone(resource.assigned_incident_id)
 
     def test_resource_status_change(self):
         """Test that a Resource's status can be updated."""
-        resource = Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1")
+        resource = Resource("Resource1", "Type1", "Zone 1")
         resource.status = ResourceStatus.ASSIGNED
         self.assertEqual(resource.status, ResourceStatus.ASSIGNED)
+
+if __name__ == "__main__":
+    unittest.main()
