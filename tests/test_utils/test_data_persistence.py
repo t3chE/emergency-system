@@ -20,6 +20,14 @@ class TestDataPersistence(unittest.TestCase):
             "Resource1": Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1"),
             "Resource2": Resource("Resource2", ResourceStatus.ASSIGNED, "Zone 2"),
         }
+        self.incidents = {
+            "1": Incident("Zone 1", "Fire", "high", ["Resource1"]),
+            "2": Incident("Zone 2", "Flood", "medium", ["Resource2"]),
+        }
+        self.resources = {
+            "Resource1": Resource("Resource1", "Type1", "Zone 1"),
+            "Resource2": Resource("Resource2", "Type2", "Zone 2"),
+        }
         self.incidents_file = "test_incidents.json"
         self.resources_file = "test_resources.json"
 
@@ -33,8 +41,8 @@ class TestDataPersistence(unittest.TestCase):
 
         # Assert
         self.assertEqual(len(loaded_incidents), len(self.incidents))
-        self.assertEqual(loaded_incidents[0].location, self.incidents[0].location)
-        self.assertEqual(loaded_incidents[1].priority, self.incidents[1].priority)
+        self.assertEqual(loaded_incidents["1"].location, self.incidents["1"].location)
+        self.assertEqual(loaded_incidents["2"].priority, self.incidents["2"].priority)
 
     def test_save_and_load_resources(self):
         """Test saving and loading resources to/from a file."""
