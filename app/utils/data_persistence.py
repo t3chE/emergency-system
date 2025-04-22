@@ -24,6 +24,9 @@ def load_incidents_from_file(file_path):
 
 def save_resources_to_file(resources, file_path):
     """ Save resources to a JSON file """ 
+    print(f"Saving resources to {file_path}:")
+    for key, resource in resources.items():
+        print(f"Resource {key}: {resource.to_dict()}")  # Debugging statement
     with open(file_path, 'w') as f:
         json.dump({key: resource.to_dict() for key, resource in resources.items()}, f, indent=4)
 
@@ -36,4 +39,4 @@ def load_resources_from_file(file_path):
             return {key: Resource.from_dict(data) for key, data in resources_data.items()}
     except FileNotFoundError:
         print(f"File {file_path} not found. Starting with an empty resources dictionary.")
-    return {}
+        return {} 

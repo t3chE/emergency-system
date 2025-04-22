@@ -20,6 +20,10 @@ class EmergencyManagement:
 
     def save_data(self, incidents_file, resources_file):
         """ Save incidents and resources to JSON files """
+        print("Saving incidents and resources...")
+        print("Resources before saving:")
+        for resource_id, resource in self.resources.items():
+            print(f"Resource {resource_id}: {resource.to_dict()}")  # Debugging statement
         save_incidents_to_file(self.incidents, incidents_file)   
         save_resources_to_file(self.resources, resources_file)
 
