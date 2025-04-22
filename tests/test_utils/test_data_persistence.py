@@ -12,14 +12,7 @@ from app.resources.emerg_resource import Resource, ResourceStatus
 class TestDataPersistence(unittest.TestCase):
     def setUp(self):
         """Set up test data for incidents and resources."""
-        self.incidents = [
-            Incident("Zone 1", "Fire", "high", ["Resource1"]),
-            Incident("Zone 2", "Flood", "medium", ["Resource2"]),
-        ]
-        self.resources = {
-            "Resource1": Resource("Resource1", ResourceStatus.AVAILABLE, "Zone 1"),
-            "Resource2": Resource("Resource2", ResourceStatus.ASSIGNED, "Zone 2"),
-        }
+        
         self.incidents = {
             "1": Incident("Zone 1", "Fire", "high", ["Resource1"]),
             "2": Incident("Zone 2", "Flood", "medium", ["Resource2"]),
