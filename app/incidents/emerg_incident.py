@@ -16,20 +16,16 @@ class IncidentStatus(Enum):
 class Incident:
     """ This class represents an emergency incident."""
 
-    def __init__(self, location: str, emergency_type: str, priority: str, required_resources: List[str]):
-        self.incident_id = str(uuid.uuid4())
+    def __init__(self, location, emergency_type, priority, required_resources):
         self.location = location
         self.emerg_type = emergency_type
         try:
             self.priority = Priority[priority.upper()]
         except KeyError:
-            print(f"Invalid priority: {priority}. Setting to default (e.g., MEDIUM).")
-            self.priority = priority.MEDIUM # Or another default
-        # Ensure priority is a valid enum member
-        self.priority = Priority[priority.upper()]  
+            raise ValueError(f"Invalid priority: {priority}. Must be one of {list(Priority.__members__.keys())}.")    
         self.required_resources = required_resources
+        self.assigned_resources = []
         self.status = IncidentStatus.OPEN 
-        self.assigned_resources: List[str] = []
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
 
