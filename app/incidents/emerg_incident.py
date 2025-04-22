@@ -1,4 +1,5 @@
 import uuid
+from app.priorities.emerg_priority import Priority
 from enum import Enum # Import Enum for status
 from typing import List # Import List for type hinting
 from datetime import datetime # Import datetime for timestamps
