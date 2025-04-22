@@ -8,6 +8,7 @@ class ResourceStatus(Enum):
     ASSIGNED = "assigned"
     UNAVAILABLE = "unavailable"
 
+    
 class Resource:
     """Class representing an emergency resource."""
     
@@ -27,6 +28,29 @@ class Resource:
                     f"Status: {self.status.value}\n"
                     f"Assigned to Incident: {self.assigned_incident_id if self.assigned_incident_id else 'None'}\n"
                     f"----------------------------------\n"
-                     ) 
+                     )
         
-               
+    def to_dict(self):
+        """Convert the Resource object to a dictionary."""
+        return {
+            "resource_id": self.resource_id,
+            "name": self.name,
+            "resource_type": self.resource_type,
+            "location": self.location,
+            "status": self.status.name,  # Use the name of the ResourceStatus enum
+            "assigned_incident_id": self.assigned_incident_id,
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Create a Resource object from a dictionary."""
+        resource = cls(
+            name=data["name"],
+            resource_type=data["resource_type"],
+            location=data["location"],
+        )
+        resource.resource_id = data["resource_id"]
+        resource.status = ResourceStatus[data["status"]]
+        resource.assigned_incident_id = data["assigned_incident_id"]
+        return resource
+    

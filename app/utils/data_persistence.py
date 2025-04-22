@@ -6,7 +6,7 @@ from app.resources.emerg_resource import Resource
 def save_incidents_to_file(incidents, file_path):
     """ Save incidents to a JSON file """
     with open(file_path, 'w') as f:
-        json.dump([incident.to_dict() for incident in incidents], f, indent=4)
+        json.dump([incident.to_dict() for incident in incidents.values()], f, indent=4)
 
 
 def load_incidents_from_file(file_path):
@@ -34,4 +34,4 @@ def load_resources_from_file(file_path):
             return {key: Resource.from_dict(data) for key, data in resources_data.items()}
     except FileNotFoundError:
         print(f"File {file_path} not found. Starting with an empty resources dictionary.")
-        return {}
+    return {key: Resource.from_dict(resource_data) for key, resource_data in data.items()}

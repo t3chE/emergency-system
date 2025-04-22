@@ -42,7 +42,7 @@ class TestEmergencyManagement(unittest.TestCase):
             emergency_type="Flood",
             priority="medium",
             required_resources=["Resource2"],
-            status="IN_PROGRESS"
+            status="IN_PROGRESS" 
         )
         self.assertTrue(updated)
         incident = self.em.incidents[incident_id]
