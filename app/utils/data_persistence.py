@@ -14,10 +14,10 @@ def load_incidents_from_file(file_path):
     try:
         with open(file_path, 'r') as f:
             incidents_data = json.load(f)
-            return [Incident.from_dict(data) for data in incidents_data]
+            return {data["incident_id"]: Incident.from_dict(data) for data in incidents_data} 
     except FileNotFoundError:
         print(f"File {file_path} not found. Starting with an empty incidents list.")
-        return []
+        return {}
 
 
 def save_resources_to_file(resources, file_path):
