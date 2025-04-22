@@ -52,6 +52,36 @@ class Incident:
         self.status = new_status
         self.updated_at = datetime.now()
 
+    @classmethod
+    def from_dict(cls, data):
+        """Create an Incident object from a dictionary."""
+        incident = cls(
+            location=data["location"],
+            emergency_type=data["emerg_type"],
+            priority=data["priority"],
+            required_resources=data["required_resources"],
+        )
+        incident.incident_id = data["incident_id"]
+        incident.assigned_resources = data["assigned_resources"]
+        incident.status = IncidentStatus[data["status"]]
+        incident.created_at = datetime.fromisoformat(data["created_at"])
+        incident.updated_at = datetime.fromisoformat(data["updated_at"])
+        return incident
+
+    def to_dict(self):
+        """Convert the Incident object to a dictionary."""
+        return {
+            "incident_id": self.incident_id,
+            "location": self.location,
+            "emerg_type": self.emerg_type,
+            "priority": self.priority.name,  # Use the name of the Priority enum
+            "required_resources": self.required_resources,
+            "assigned_resources": self.assigned_resources,
+            "status": self.status.name,  # Use the name of the IncidentStatus enum
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
+
     def __repr__(self):
         """ String representation of the incident object """
         
