@@ -1,5 +1,5 @@
 import unittest
-from app.incidents.emerg_incident import Incident
+from app.incidents.emerg_incident import Incident, IncidentStatus
 from app.priorities.emerg_priority import Priority
 
 class TestIncident(unittest.TestCase):
@@ -10,4 +10,7 @@ class TestIncident(unittest.TestCase):
         self.assertEqual(incident.emerg_type, "Fire")
         self.assertEqual(incident.priority, Priority.HIGH)
         self.assertEqual(incident.required_resources, ["Resource1"])
-        self.assertEqual(incident.status, "OPEN")
+        self.assertEqual(incident.status, IncidentStatus.OPEN)
+
+if __name__ == "__main__":
+    unittest.main()
