@@ -16,7 +16,7 @@ def load_incidents_from_file(file_path):
             incidents_data = json.load(f)
             return {data["incident_id"]: Incident.from_dict(data) for data in incidents_data} 
     except FileNotFoundError:
-        print(f"File {file_path} not found. Starting with an empty incidents list.")
+        print(f"File {file_path} not found. Starting with an empty incidents dictionary.")
         return {}
 
 
@@ -34,4 +34,4 @@ def load_resources_from_file(file_path):
             return {key: Resource.from_dict(data) for key, data in resources_data.items()}
     except FileNotFoundError:
         print(f"File {file_path} not found. Starting with an empty resources dictionary.")
-    return {key: Resource.from_dict(resource_data) for key, resource_data in data.items()}
+    return {}
