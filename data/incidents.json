@@ -1,0 +1,15 @@
+{
+    "90c722b1-983d-4777-b176-c2846422aded": {
+        "incident_id": "90c722b1-983d-4777-b176-c2846422aded",
+        "location": "Zone 2",
+        "emerg_type": "medical",
+        "priority": "MEDIUM",
+        "required_resources": [
+            "Ambulance"
+        ],
+        "assigned_resources": [],
+        "status": "OPEN",
+        "created_at": "2025-04-23T10:40:37.667533",
+        "updated_at": "2025-04-23T10:40:37.667554"
+    }
+}
