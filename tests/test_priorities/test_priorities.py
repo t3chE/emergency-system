@@ -19,5 +19,11 @@ class TestPriority(unittest.TestCase):
         self.assertEqual(Priority["HIGH"], Priority.HIGH)
         self.assertEqual(Priority["high".upper()], Priority.HIGH)
 
+    def test_priority_enum_string_representation(self):
+        """Test the string representation of Priority enum members."""
+        self.assertEqual(str(Priority.HIGH), "high")
+        self.assertEqual(str(Priority.MEDIUM), "medium")
+        self.assertEqual(str(Priority.LOW), "low")
+
 if __name__ == "__main__":
     unittest.main()
