@@ -6,23 +6,49 @@ from app.utils.data_persistence import (
     save_resources_to_file,
     load_resources_from_file,
 )
-from app.incidents.emerg_incident import Incident
+from app.incidents.emerg_incident import Incident, IncidentStatus
 from app.resources.emerg_resource import Resource, ResourceStatus
+from app.priorities.emerg_priority import Priority
+
 
 class TestDataPersistence(unittest.TestCase):
     def setUp(self):
         """Set up test data for incidents and resources."""
-        
+        self.test_dir = "test_data"  # Directory for test files
+        os.makedirs(self.test_dir, exist_ok=True)  # Ensure the directory exists
+
         self.incidents = {
-            "1": Incident("Zone 1", "Fire", "high", ["Resource1"]),
-            "2": Incident("Zone 2", "Flood", "medium", ["Resource2"]),
+            "1": Incident(
+                location="Zone 1",
+                emergency_type="Fire",
+                priority=Priority.HIGH,
+                required_resources=["Resource1"],
+                status=IncidentStatus.OPEN,
+            ),
+            "2": Incident(
+                location="Zone 2",
+                emergency_type="Flood",
+                priority=Priority.MEDIUM,
+                required_resources=["Resource2"],
+                status=IncidentStatus.IN_PROGRESS,
+            ),
         }
         self.resources = {
-            "Resource1": Resource("Resource1", "Type1", "Zone 1"),
-            "Resource2": Resource("Resource2", "Type2", "Zone 2"),
+            "Resource1": Resource(
+                name="Resource1",
+                resource_type="Type1",
+                location="Zone 1",
+                status=ResourceStatus.AVAILABLE,
+            ),
+            "Resource2": Resource(
+                name="Resource2",
+                resource_type="Type2",
+                location="Zone 2",
+                status=ResourceStatus.ASSIGNED,
+            ),
         }
-        self.incidents_file = "test_incidents.json"
-        self.resources_file = "test_resources.json"
+        self.incidents_file = os.path.join(self.test_dir, "test_incidents.json")
+        self.resources_file = os.path.join(self.test_dir, "test_resources.json")
 
     def test_save_and_load_incidents(self):
         """Test saving and loading incidents to/from a file."""
@@ -35,7 +61,8 @@ class TestDataPersistence(unittest.TestCase):
         # Assert
         self.assertEqual(len(loaded_incidents), len(self.incidents))
         self.assertEqual(loaded_incidents["1"].location, self.incidents["1"].location)
-        self.assertEqual(loaded_incidents["2"].priority, self.incidents["2"].priority)
+        self.assertEqual(loaded_incidents["1"].priority, self.incidents["1"].priority)
+        self.assertEqual(loaded_incidents["2"].status, self.incidents["2"].status)
 
     def test_save_and_load_resources(self):
         """Test saving and loading resources to/from a file."""
@@ -56,6 +83,9 @@ class TestDataPersistence(unittest.TestCase):
             os.remove(self.incidents_file)
         if os.path.exists(self.resources_file):
             os.remove(self.resources_file)
+        if os.path.exists(self.test_dir):
+            os.rmdir(self.test_dir)
+
 
 if __name__ == "__main__":
     unittest.main()
