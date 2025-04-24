@@ -1,1 +1,32 @@
-{}
+{
+    "0703b2c8-48c1-450f-9078-ed8f3a7087f1": {
+        "resource_id": "0703b2c8-48c1-450f-9078-ed8f3a7087f1",
+        "name": "Fire Truck 1",
+        "resource_type": "Fire Truck",
+        "location": "Zone 1",
+        "status": "AVAILABLE",
+        "assigned_incident_id": null,
+        "created_at": "2025-04-24T14:35:45.844397",
+        "updated_at": "2025-04-24T14:35:45.844424"
+    },
+    "bf88c825-04c3-4b74-b910-28887c82e7ab": {
+        "resource_id": "bf88c825-04c3-4b74-b910-28887c82e7ab",
+        "name": "Ambulance 1",
+        "resource_type": "Ambulance",
+        "location": "Zone 2",
+        "status": "AVAILABLE",
+        "assigned_incident_id": null,
+        "created_at": "2025-04-24T14:35:45.844446",
+        "updated_at": "2025-04-24T14:35:45.844446"
+    },
+    "e7ab05da-de86-4098-9f9d-92e68fb013dd": {
+        "resource_id": "e7ab05da-de86-4098-9f9d-92e68fb013dd",
+        "name": "Police Car 1",
+        "resource_type": "Police Car",
+        "location": "Zone 3",
+        "status": "AVAILABLE",
+        "assigned_incident_id": null,
+        "created_at": "2025-04-24T14:35:45.844458",
+        "updated_at": "2025-04-24T14:35:45.844459"
+    }
+}

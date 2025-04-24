@@ -14,6 +14,7 @@ class EmergencyManagement:
     def __init__(self, data_dir: str = "data"):
         """
         Initializes the EmergencyManagement system.
+6
 
         Args:
             data_dir (str, optional): The directory to store data files.
@@ -24,6 +25,18 @@ class EmergencyManagement:
         self.resources: Dict[str, Resource] = {}
         self.location_mapping: Dict[str, tuple] = self._initialize_location_mapping()  # Use the private method
         self.load_data()  # Load data on startup
+        self._add_default_resources()  # Add default resources
+
+    def _add_default_resources(self):
+        """Add default resources to the system."""
+        if not self.resources:  # Only add default resources if none exist
+            default_resources = [
+                Resource(name="Fire Truck 1", resource_type="Fire Truck", location="Zone 1", status=ResourceStatus.AVAILABLE),
+                Resource(name="Ambulance 1", resource_type="Ambulance", location="Zone 2", status=ResourceStatus.AVAILABLE),
+                Resource(name="Police Car 1", resource_type="Police Car", location="Zone 3", status=ResourceStatus.AVAILABLE),
+            ]
+            for resource in default_resources:
+                self.resources[resource.resource_id] = resource    
 
     def _get_data_file_path(self, filename: str) -> str:
         """
@@ -83,13 +96,6 @@ class EmergencyManagement:
             "Zone 1": (51.4592, -0.2567),  # Example coordinates
             "Zone 2": (51.4761, -0.1441),
             "Zone 3": (51.4575, -0.1165),
-            "Zone 4": (51.4573, -0.1437),
-            "Zone 5": (51.3697, -0.0779),
-            "Zone 6": (51.4882, -0.0958),
-            "Zone 7": (51.4789, -0.2017),
-            "Zone 8": (51.4789, -0.1221),
-            "Zone 9": (51.4571, -0.0057),
-            "Zone 10": (51.4695, -0.0685),
         }
 
     def process_resource_allocation(self) -> None:
@@ -309,7 +315,12 @@ class EmergencyManagement:
                     resources = self.view_resources()
                     if resources:
                         for resource in resources:
-                            print(resource)
+                            print(f"Resource ID: {resource.resource_id}")
+                            print(f"Name: {resource.name}")
+                            print(f"Type: {resource.resource_type}")
+                            print(f"Location: {resource.location}")
+                            print(f"Status: {resource.status.value}")
+                            print(f"Assigned Incident ID: {resource.assigned_incident_id or 'None'}\n")
                     else:
                         print("No resources to display.")
 
