@@ -1,0 +1,17 @@
+requirements.txt
+If you are using Python 3.4 or higher, the enum module is part of the standard library, and you can remove enum34 from the list.
+# Core dependencies
+enum34==1.1.10  # For working with enums (if using Python < 3.4)
+
+
+Additional Dependencies (Optional)
+
+If you plan to extend the program with features like a GUI, database integration, or web-based functionality, you might need the following:
+# For GUI development
+PyQt5==5.15.9
+
+# For database integration
+SQLAlchemy==2.0.21
+
+# For web-based functionality
+Flask==2.3.2
