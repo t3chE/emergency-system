@@ -14,7 +14,6 @@ class EmergencyManagement:
     def __init__(self, data_dir: str = "data"):
         """
         Initializes the EmergencyManagement system.
-6
 
         Args:
             data_dir (str, optional): The directory to store data files.
